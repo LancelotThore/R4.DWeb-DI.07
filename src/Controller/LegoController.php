@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use stdClass;
+use App\Entity\Lego;
 
 
 /* le nom de la classe doit être cohérent avec le nom du fichier */
@@ -22,6 +23,29 @@ class LegoController extends AbstractController
     // "/" à la méthode home pour que Symfony l'exécute chaque fois
     // que l'on accède à la racine de notre site.
 
+    private $legos;
+
+    public function __construct()
+    {
+            $this->legos = file_get_contents("../src/data.json");
+            $this->legos = json_decode($this->legos);
+            var_dump($this->legos);
+
+    }
+
+    #[Route('/',)]
+    public function home(): Response
+    {
+        foreach ($this->legos as $lego => $value) {
+            /*$lego[2] = new Lego($lego[1], $lego[2], $lego[0]);
+            
+            
+
+            return $this->render('lego.html.twig', ['lego' => $lego[2]]);*/
+        }
+    }
+
+    /*
     #[Route('/',)]
     public function home(): Response
     {
@@ -38,6 +62,7 @@ class LegoController extends AbstractController
 
         return $this->render('lego.html.twig', ['lego' => $cocci]);
     }
+    */
 
     /* #[Route('/me',)]
     public function me()
