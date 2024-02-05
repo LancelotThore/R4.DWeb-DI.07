@@ -17,10 +17,10 @@ class Lego {
     public $boxImage;
     public $legoImage;
 
-    function __construct($id,$name,$coll){
+    function __construct($id,$name,$collection){
         $this->id = $id;
         $this->name = $name;
-        $this->collection = $coll;
+        $this->collection = $collection;
     }
 
     function getId(): int {
@@ -34,9 +34,6 @@ class Lego {
     function getCollection(): string {
         return $this->collection;
     }
-
-
-
 
     function getDescription(): string {
         return $this->description;
@@ -72,6 +69,5 @@ class Lego {
     function setLegoImage(string $legoImage) {
         $this->legoImage = $legoImage;
     }
-
 
 }

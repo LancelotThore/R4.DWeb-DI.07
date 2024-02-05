@@ -1,10 +1,8 @@
 <?php
 
-
-
 /* indique où "vit" ce fichier */
-namespace App\Controller;
 
+namespace App\Controller;
 
 /* indique l'utilisation du bon bundle pour gérer nos routes */
 
@@ -15,12 +13,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /* le nom de la classe doit être cohérent avec le nom du fichier */
+
 class LegoController extends AbstractController
 {
-   private $legos = [];
+    private $legos = [];
 
-   
-   function __construct() {
+
+    function __construct()
+    {
         $file = file_get_contents('/var/www/html/src/data.json');
         $file = json_decode($file);
         foreach ($file as $lego) {
@@ -32,18 +32,18 @@ class LegoController extends AbstractController
             $leg->setLegoImage($lego->images->bg);
             array_push($this->legos, $leg);
         }
-   }
+    }
 
 
 
-    #[Route('/', )]
+    #[Route('/',)]
     public function homeAll(): Response
-    {  
+    {
         return $this->render("lego.html.twig", [
             'legos' => $this->legos,
         ]);
     }
-    
+
     // #[Route('/creator', )]
     // public function homeCreator(): Response
     // {
@@ -84,10 +84,33 @@ class LegoController extends AbstractController
     // }
 
 
+
+    #[Route('/{collection}', 'filter_by_collection', requirements: ['collection' => 'creator|star_wars|creator_expert'])]
+    public function filter($collection): Response
+    {
+        $filteredLegos = array_filter($this->legos, function ($lego) use ($collection) {
+            return strtolower($lego->collection) == str_replace('_', ' ', $collection);
+        });
+
+        return $this->render("lego.html.twig", [
+            'legos' => $filteredLegos,
+        ]);
+    }
+
+    /*
     #[Route('/{collection}', 'filter_by_collection')]
     public function filter($collection): Response
     {
-        die($collection);
-    }
+        $newlegos = [];
+        foreach ($this->legos as $lego) {
+            if (strtolower($lego->collection) == str_replace('_', ' ', $collection)) {
+                array_push($newlegos, $lego);
+            }
+        }
 
+        return $this->render("lego.html.twig", [
+            'legos' => $newlegos,
+        ]);
+    }
+    */
 }
