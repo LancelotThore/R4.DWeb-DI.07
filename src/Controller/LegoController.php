@@ -8,9 +8,11 @@ namespace App\Controller;
 
 use stdClass;
 use App\Entity\Lego as Lego;
+use App\Service\CreditsGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\DatabaseInterface;
 
 /* le nom de la classe doit être cohérent avec le nom du fichier */
 
@@ -21,6 +23,7 @@ class LegoController extends AbstractController
 
     function __construct()
     {
+        
         $file = file_get_contents('/var/www/html/src/data.json');
         $file = json_decode($file);
         foreach ($file as $lego) {
@@ -33,7 +36,6 @@ class LegoController extends AbstractController
             array_push($this->legos, $leg);
         }
     }
-
 
 
     #[Route('/',)]
@@ -97,20 +99,9 @@ class LegoController extends AbstractController
         ]);
     }
 
-    /*
-    #[Route('/{collection}', 'filter_by_collection')]
-    public function filter($collection): Response
+    #[Route('/credits', 'credits')]
+    public function credits(CreditsGenerator $credits): Response
     {
-        $newlegos = [];
-        foreach ($this->legos as $lego) {
-            if (strtolower($lego->collection) == str_replace('_', ' ', $collection)) {
-                array_push($newlegos, $lego);
-            }
-        }
-
-        return $this->render("lego.html.twig", [
-            'legos' => $newlegos,
-        ]);
+        return new Response($credits->getCredits());
     }
-    */
 }
