@@ -35,6 +35,11 @@ class Lego
     #[ORM\Column(length: 255)]
     private ?string $legoImage = null;
 
+    function __construct($id)
+    {
+        $this->id = $id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
