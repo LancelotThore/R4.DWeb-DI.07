@@ -3,12 +3,14 @@
 /* indique où "vit" ce fichier */
 namespace App\Controller;
 
+
 /* indique l'utilisation du bon bundle pour gérer nos routes */
+
 use stdClass;
 use App\Entity\Lego as Lego;
 use App\Entity\LegoCollection;
-use App\Repository\LegoRepository;
 use App\Repository\LegoCollectionRepository;
+use App\Repository\LegoRepository;
 use App\Service\CreditsGenerator;
 use App\Service\DatabaseInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,20 +29,21 @@ class LegoController extends AbstractController
     {
         return $this->render("lego.html.twig", [
             'legos' => $this->legoRepository->findAll(),
-            'collection' =>$this->legoCollectionRepository->findAllCollections(),
+            'collection' =>$this->legoCollectionRepository->findAll(),
         ]);
     }
 
 
-    #[Route('/{collection}', 'filter_by_collection', requirements: ['collection' => 'Creator|Star Wars|Creator Expert|Harry Potter'])]
-    public function filter($collection, LegoRepository $legoRepository): Response
+    #[Route('/{name}', 'filter_by_name', requirements: ['name' => 'Creator|Star Wars|Creator Expert|Harry Potter'])]
+    public function filter($name, LegoCollection $legoCollection): Response
     {
+
+        // dd($this->legoRepository->findByCollection($name));
         return $this->render("lego.html.twig", [
-            'legos' => $legoRepository->findByCollection($collection),
-            'collection' =>$legoRepository->findAllCollections(),
+            'legos' => $legoCollection->getLegos(),
+            'collection' =>$this->legoCollectionRepository->findAll(),
         ]);
     }
-
 
     #[Route('/credits', 'credits')]
     public function credits(CreditsGenerator $credits): Response
@@ -48,23 +51,26 @@ class LegoController extends AbstractController
         return new Response($credits->getCredits());
     }
 
-    /*
-    #[Route('/test', 'test')]
-    public function test(EntityManagerInterface $entityManager): Response
+    // #[Route('/test', 'test')]
+    // public function test(EntityManagerInterface $entityManager): Response
+    // {
+    //     $l = new Lego(1234);
+    //     $l->setName("un beau Lego");
+    //     $l->setCollection("Lego espace");
+    //     $l->setPrice(32.00);
+    //     $l->setPieces(122);
+    //     $l->setDescription("Lego espace");
+    //     $l->setLegoImage("Lego espace");
+    //     $l->setBoxImage("Lego espace");
+    //     $entityManager->persist($l);
+    //     $entityManager->flush();
+    //     dd($l);
+    // }
+
+    #[Route('/test/{name}', 'test')]
+    public function test(LegoCollection $collection): Response
     {
-        $l = new Lego(1234);
-        $l->setName("un beau Lego");
-        $l->setCollection(1);
-        $l->setDescription("Bonjour, c'est un beau lego !");
-        $l->setPrice(499.99);
-        $l->setPieces(1);
-        $l->setBoxImage("./unFondDeBeauLego.jpg");
-        $l->setLegoImage("./unBeauLego.jpg");
-
-        $entityManager->persist($l);
-        $entityManager->flush();
-
-        return new Response('Lego saved with id : '.$l->getId());
+        dd($collection);
     }
-    */
+
 }
