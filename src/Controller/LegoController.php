@@ -6,7 +6,9 @@ namespace App\Controller;
 /* indique l'utilisation du bon bundle pour gérer nos routes */
 use stdClass;
 use App\Entity\Lego as Lego;
+use App\Entity\LegoCollection;
 use App\Repository\LegoRepository;
+use App\Repository\LegoCollectionRepository;
 use App\Service\CreditsGenerator;
 use App\Service\DatabaseInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,14 +20,14 @@ use Symfony\Component\Routing\Attribute\Route;
 class LegoController extends AbstractController
 {
 
-    public function __construct(private LegoRepository $legoRepository) {}
+    public function __construct(private LegoRepository $legoRepository, private LegoCollectionRepository $legoCollectionRepository) {}
 
     #[Route('/', )]
     public function homeAll(): Response
     {
         return $this->render("lego.html.twig", [
             'legos' => $this->legoRepository->findAll(),
-            'collection' =>$this->legoRepository->findAllCollections(),
+            'collection' =>$this->legoCollectionRepository->findAllCollections(),
         ]);
     }
 
@@ -46,13 +48,13 @@ class LegoController extends AbstractController
         return new Response($credits->getCredits());
     }
 
-    
+    /*
     #[Route('/test', 'test')]
     public function test(EntityManagerInterface $entityManager): Response
     {
         $l = new Lego(1234);
         $l->setName("un beau Lego");
-        $l->setCollection("Lego espace");
+        $l->setCollection(1);
         $l->setDescription("Bonjour, c'est un beau lego !");
         $l->setPrice(499.99);
         $l->setPieces(1);
@@ -64,4 +66,5 @@ class LegoController extends AbstractController
 
         return new Response('Lego saved with id : '.$l->getId());
     }
+    */
 }
