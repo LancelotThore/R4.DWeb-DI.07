@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Attribute\Route;
 /* le nom de la classe doit être cohérent avec le nom du fichier */
 class LegoController extends AbstractController
 {
-
     public function __construct(private LegoRepository $legoRepository, private LegoCollectionRepository $legoCollectionRepository) {}
 
     #[Route('/', )]
